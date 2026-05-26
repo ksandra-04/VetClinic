@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="VetClinic.API/VetClinic.API.csproj" Id="450e9228-282b-47dd-816d-55cc550055b0" />
+  <Project Path="VetClinic.DataAccess/VetClinic.DataAccess.csproj" Id="67b73bff-198f-40f9-8935-bba825332cc7" />
+  <Project Path="VetClinic.Domain/VetClinic.Domain.csproj" Id="9fdb0635-d8ca-4e2d-a84a-faa6de3aac15" />
+</Solution>
