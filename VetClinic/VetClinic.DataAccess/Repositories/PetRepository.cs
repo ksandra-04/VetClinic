@@ -21,4 +21,10 @@ public class PetRepository : GenericRepository<Pet>, IPetRepository
             .Where(p => p.OwnerId == ownerId)
             .Include(p => p.Owner)
             .ToListAsync();
+
+    public async Task<IEnumerable<Pet>> GetAllWithDetailsAsync()
+        => await _dbSet
+            .Include(p => p.Owner)
+            .Include(p => p.Appointments)
+            .ToListAsync();
 }

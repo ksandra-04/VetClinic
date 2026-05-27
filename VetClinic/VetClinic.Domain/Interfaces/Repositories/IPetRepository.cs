@@ -6,4 +6,5 @@ public interface IPetRepository : IGenericRepository<Pet>
 {
     Task<Pet?> GetByIdWithDetailsAsync(int id);
     Task<IEnumerable<Pet>> GetByOwnerAsync(int ownerId);
+    Task<IEnumerable<Pet>> GetAllWithDetailsAsync();
 }

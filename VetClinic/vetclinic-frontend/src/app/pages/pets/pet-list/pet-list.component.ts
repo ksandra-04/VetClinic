@@ -1,76 +1,73 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatChipsModule } from '@angular/material/chips';
 import { Pet, PetService } from '../../../core/services/pet.service';
 
 @Component({
   selector: 'app-pet-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatCardModule, MatSnackBarModule, MatChipsModule],
+  imports: [CommonModule, RouterLink, MatButtonModule, MatIconModule, MatSnackBarModule],
   template: `
-    <mat-card style="margin: 20px;">
-      <mat-card-header>
-        <mat-card-title>🐾 Mascotas registradas</mat-card-title>
-        <span style="flex:1"></span>
-        <a mat-raised-button color="primary" routerLink="/pets/new">+ Nueva Mascota</a>
-      </mat-card-header>
-      <mat-card-content>
-        <table mat-table [dataSource]="pets" style="width:100%; margin-top:16px;">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Nombre</th>
-            <td mat-cell *matCellDef="let p">{{p.name}}</td>
-          </ng-container>
-          <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Tipo</th>
-            <td mat-cell *matCellDef="let p">
-              <mat-chip>{{p.typeName}}</mat-chip>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="breed">
-            <th mat-header-cell *matHeaderCellDef>Raza</th>
-            <td mat-cell *matCellDef="let p">{{p.breed}}</td>
-          </ng-container>
-          <ng-container matColumnDef="owner">
-            <th mat-header-cell *matHeaderCellDef>Dueño</th>
-            <td mat-cell *matCellDef="let p">{{p.ownerFullName}}</td>
-          </ng-container>
-          <ng-container matColumnDef="appointments">
-            <th mat-header-cell *matHeaderCellDef>Citas</th>
-            <td mat-cell *matCellDef="let p">{{p.appointmentsCount}}</td>
-          </ng-container>
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let p">
-              <a mat-icon-button color="primary" [routerLink]="['/pets/edit', p.id]">
-                <mat-icon>edit</mat-icon>
-              </a>
-              <button mat-icon-button color="warn" (click)="delete(p.id)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="columns"></tr>
-          <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+    <div class="page-container">
+      <div class="page-header">
+        <h1 class="page-title">🐾 Mascotas</h1>
+        <a mat-raised-button class="btn-primary" routerLink="/pets/new">+ Nueva Mascota</a>
+      </div>
+
+      <div class="vet-card">
+        <table class="vet-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Raza</th>
+              <th>Fecha Nac.</th>
+              <th>Dueño</th>
+              <th>Citas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of pets">
+              <td><strong>{{p.name}}</strong></td>
+              <td><span class="badge badge-pet">{{getPetIcon(p.type)}} {{p.typeName}}</span></td>
+              <td>{{p.breed || '—'}}</td>
+              <td style="color:#6b7280">{{p.birthDate | date:'dd/MM/yyyy'}}</td>
+              <td>{{p.ownerFullName}}</td>
+              <td style="text-align:center">{{p.appointmentsCount}}</td>
+              <td>
+                <a mat-icon-button color="primary" [routerLink]="['/pets/edit', p.id]" title="Editar">
+                  <mat-icon>edit</mat-icon>
+                </a>
+                <button mat-icon-button color="warn" (click)="delete(p.id)" title="Eliminar">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="pets.length === 0">
+              <td colspan="7" class="empty-state">No hay mascotas registradas</td>
+            </tr>
+          </tbody>
         </table>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </div>
   `
 })
 export class PetListComponent implements OnInit {
   pets: Pet[] = [];
-  columns = ['name', 'type', 'breed', 'owner', 'appointments', 'actions'];
 
   constructor(private petService: PetService, private snackBar: MatSnackBar) { }
 
   ngOnInit() { this.load(); }
 
   load() { this.petService.getAll().subscribe(data => this.pets = data); }
+
+  getPetIcon(type: number): string {
+    return ['🐶', '🐱', '🐦', '🐰', '🐾'][type] ?? '🐾';
+  }
 
   delete(id: number) {
     if (confirm('¿Eliminar esta mascota?')) {

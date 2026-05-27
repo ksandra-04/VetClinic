@@ -1,38 +1,253 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 html {
   height: 100%;
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(( color: ( primary: mat.$azure-palette, tertiary: mat.$blue-palette, ), typography: Roboto, density: 0, ));
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
+  background-color: #f0f4f8;
   color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
+  font-family: 'Plus Jakarta Sans', sans-serif;
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+
+/* ── Navbar ── */
+.vet-navbar {
+  background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #3949ab 100%) !important;
+  box-shadow: 0 2px 12px rgba(26,35,126,0.3) !important;
+  padding: 0 24px !important;
+}
+
+  .vet-navbar .brand {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .vet-navbar a.nav-link {
+    color: rgba(255,255,255,0.85) !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+    border-radius: 8px;
+    padding: 6px 14px;
+    transition: all 0.2s;
+  }
+
+    .vet-navbar a.nav-link:hover,
+    .vet-navbar a.nav-link.active-link {
+      background: rgba(255,255,255,0.15) !important;
+      color: #fff !important;
+    }
+
+/* ── Page Container ── */
+.page-container {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 24px;
+}
+
+/* ── Page Header ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a237e;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+/* ── Card ── */
+.vet-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+/* ── Table ── */
+.vet-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+  .vet-table th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #6b7280;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+  }
+
+  .vet-table td {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    color: #374151;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .vet-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .vet-table tr:hover td {
+    background: #f8fafc;
+  }
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-scheduled {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-inprogress {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.badge-completed {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.badge-cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Pet type badges */
+.badge-pet {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  background: linear-gradient(135deg, #1a237e, #3949ab) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 2px 8px rgba(26,35,126,0.25) !important;
+  transition: all 0.2s !important;
+}
+
+  .btn-primary:hover {
+    box-shadow: 0 4px 16px rgba(26,35,126,0.35) !important;
+    transform: translateY(-1px);
+  }
+
+/* ── Inline Form Panel ── */
+.form-panel {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+  .form-panel h3 {
+    margin: 0 0 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a237e;
+  }
+
+/* ── Form Page ── */
+.form-container {
+  max-width: 540px;
+  margin: 32px auto;
+  padding: 0 24px;
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+  padding: 32px;
+}
+
+  .form-card h2 {
+    margin: 0 0 24px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a237e;
+  }
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-cancel {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+}
+
+/* ── Status action buttons ── */
+.btn-start {
+  color: #d97706 !important;
+  border-color: #d97706 !important;
+  border-radius: 8px !important;
+  font-size: 0.78rem !important;
+}
+
+.btn-complete {
+  color: #059669 !important;
+  border-color: #059669 !important;
+  border-radius: 8px !important;
+  font-size: 0.78rem !important;
+}
+
+.btn-cancel-s {
+  color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  border-radius: 8px !important;
+  font-size: 0.78rem !important;
+}
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #9ca3af;
+  font-size: 0.95rem;
+}

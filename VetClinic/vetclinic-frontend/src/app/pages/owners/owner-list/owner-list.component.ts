@@ -1,73 +1,69 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Owner, OwnerService } from '../../../core/services/owner.service';
 
 @Component({
   selector: 'app-owner-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatCardModule, MatSnackBarModule],
+  imports: [CommonModule, RouterLink, MatButtonModule, MatIconModule, MatSnackBarModule],
   template: `
-    <mat-card style="margin: 20px;">
-      <mat-card-header>
-        <mat-card-title>👤 Dueños registrados</mat-card-title>
-        <span style="flex:1"></span>
-        <a mat-raised-button color="primary" routerLink="/owners/new">+ Nuevo Dueño</a>
-      </mat-card-header>
-      <mat-card-content>
-        <table mat-table [dataSource]="owners" style="width:100%; margin-top:16px;">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Nombre</th>
-            <td mat-cell *matCellDef="let o">{{o.firstName}} {{o.lastName}}</td>
-          </ng-container>
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td mat-cell *matCellDef="let o">{{o.email}}</td>
-          </ng-container>
-          <ng-container matColumnDef="phone">
-            <th mat-header-cell *matHeaderCellDef>Teléfono</th>
-            <td mat-cell *matCellDef="let o">{{o.phone}}</td>
-          </ng-container>
-          <ng-container matColumnDef="pets">
-            <th mat-header-cell *matHeaderCellDef>Mascotas</th>
-            <td mat-cell *matCellDef="let o">{{o.petsCount}}</td>
-          </ng-container>
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let o">
-              <a mat-icon-button color="primary" [routerLink]="['/owners/edit', o.id]">
-                <mat-icon>edit</mat-icon>
-              </a>
-              <button mat-icon-button color="warn" (click)="delete(o.id)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="columns"></tr>
-          <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+    <div class="page-container">
+      <div class="page-header">
+        <h1 class="page-title">👤 Dueños</h1>
+        <a mat-raised-button class="btn-primary" routerLink="/owners/new">+ Nuevo Dueño</a>
+      </div>
+
+      <div class="vet-card">
+        <table class="vet-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Mascotas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let o of owners">
+              <td><strong>{{o.firstName}} {{o.lastName}}</strong></td>
+              <td>{{o.email}}</td>
+              <td>{{o.phone}}</td>
+              <td style="color:#6b7280">{{o.address}}</td>
+              <td>
+                <span class="badge badge-pet">{{o.petsCount}} mascota{{o.petsCount !== 1 ? 's' : ''}}</span>
+              </td>
+              <td>
+                <a mat-icon-button color="primary" [routerLink]="['/owners/edit', o.id]" title="Editar">
+                  <mat-icon>edit</mat-icon>
+                </a>
+                <button mat-icon-button color="warn" (click)="delete(o.id)" title="Eliminar">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="owners.length === 0">
+              <td colspan="6" class="empty-state">No hay dueños registrados</td>
+            </tr>
+          </tbody>
         </table>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </div>
   `
 })
 export class OwnerListComponent implements OnInit {
   owners: Owner[] = [];
-  columns = ['name', 'email', 'phone', 'pets', 'actions'];
 
   constructor(private ownerService: OwnerService, private snackBar: MatSnackBar) { }
 
-  ngOnInit() {
-    this.load();
-  }
+  ngOnInit() { this.load(); }
 
-  load() {
-    this.ownerService.getAll().subscribe(data => this.owners = data);
-  }
+  load() { this.ownerService.getAll().subscribe(data => this.owners = data); }
 
   delete(id: number) {
     if (confirm('¿Eliminar este dueño?')) {

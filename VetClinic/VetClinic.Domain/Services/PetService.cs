@@ -20,7 +20,7 @@ public class PetService : IPetService
     }
 
     public async Task<IEnumerable<Pet>> GetAllAsync()
-        => await _petRepository.GetAllAsync();
+    => await _petRepository.GetAllWithDetailsAsync();
 
     public async Task<Pet> GetByIdAsync(int id)
     {
