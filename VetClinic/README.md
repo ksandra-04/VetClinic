@@ -6,7 +6,7 @@ Sistema full-stack de gestión veterinaria desarrollado como proyecto final grup
 
 | Nombre | Rol |
 |--------|-----|
-| Kasandra Pimienta 
+| Kasandra Pimienta | Estudiante
 
 
 ## 🛠️ Tecnologías
