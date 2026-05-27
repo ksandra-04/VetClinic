@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatBadgeModule } from '@angular/material/badge';
 import { Appointment, AppointmentService } from '../../../core/services/appointment.service';
 import { PetService, Pet } from '../../../core/services/pet.service';
 import { VeterinarianService, Veterinarian } from '../../../core/services/veterinarian.service';
@@ -18,7 +17,7 @@ import { VeterinarianService, Veterinarian } from '../../../core/services/veteri
 @Component({
   selector: 'app-appointment-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatCardModule, MatSnackBarModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatChipsModule, MatBadgeModule],
+  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatCardModule, MatSnackBarModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatChipsModule],
   template: `
     <mat-card style="margin: 20px;">
       <mat-card-header>
@@ -27,7 +26,6 @@ import { VeterinarianService, Veterinarian } from '../../../core/services/veteri
         <button mat-raised-button color="primary" (click)="showForm=!showForm">+ Nueva Cita</button>
       </mat-card-header>
       <mat-card-content>
-
         <div *ngIf="showForm" style="background:#f5f5f5; padding:16px; margin:16px 0; border-radius:8px;">
           <h3 style="margin:0 0 12px">Nueva Cita</h3>
           <form [formGroup]="form" (ngSubmit)="create()" style="display:flex; flex-wrap:wrap; gap:12px;">
@@ -61,7 +59,6 @@ import { VeterinarianService, Veterinarian } from '../../../core/services/veteri
             </div>
           </form>
         </div>
-
         <table mat-table [dataSource]="appointments" style="width:100%; margin-top:16px;">
           <ng-container matColumnDef="pet">
             <th mat-header-cell *matHeaderCellDef>Mascota</th>
@@ -82,9 +79,9 @@ import { VeterinarianService, Veterinarian } from '../../../core/services/veteri
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Estado</th>
             <td mat-cell *matCellDef="let a">
-              <mat-chip [style.background]="getColor(a.status)" style="color:white">
+              <span [style.background]="getColor(a.status)" style="color:white; padding:4px 8px; border-radius:12px; font-size:12px;">
                 {{getStatusName(a.status)}}
-              </mat-chip>
+              </span>
             </td>
           </ng-container>
           <ng-container matColumnDef="reason">
@@ -115,14 +112,7 @@ export class AppointmentListComponent implements OnInit {
   vets: Veterinarian[] = [];
   columns = ['pet', 'owner', 'vet', 'date', 'status', 'reason', 'actions'];
   showForm = false;
-
-  form = this.fb.group({
-    petId: [null, Validators.required],
-    veterinarianId: [null, Validators.required],
-    appointmentDate: ['', Validators.required],
-    reason: ['', Validators.required],
-    notes: ['']
-  });
+  form: FormGroup;
 
   constructor(
     private appointmentService: AppointmentService,
@@ -130,7 +120,15 @@ export class AppointmentListComponent implements OnInit {
     private vetService: VeterinarianService,
     private snackBar: MatSnackBar,
     private fb: FormBuilder
-  ) { }
+  ) {
+    this.form = this.fb.group({
+      petId: [null, Validators.required],
+      veterinarianId: [null, Validators.required],
+      appointmentDate: ['', Validators.required],
+      reason: ['', Validators.required],
+      notes: ['']
+    });
+  }
 
   ngOnInit() {
     this.load();
@@ -150,16 +148,16 @@ export class AppointmentListComponent implements OnInit {
 
   create() {
     if (this.form.invalid) return;
-    this.appointmentService.create(this.form.value as any).subscribe({
+    this.appointmentService.create(this.form.value).subscribe({
       next: () => { this.snackBar.open('Cita creada', 'OK', { duration: 3000 }); this.showForm = false; this.form.reset(); this.load(); },
-      error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+      error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
     });
   }
 
   changeStatus(id: number, status: number) {
     this.appointmentService.updateStatus(id, status).subscribe({
       next: () => { this.snackBar.open('Estado actualizado', 'OK', { duration: 3000 }); this.load(); },
-      error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+      error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
     });
   }
 
@@ -167,7 +165,7 @@ export class AppointmentListComponent implements OnInit {
     if (confirm('¿Eliminar esta cita?')) {
       this.appointmentService.delete(id).subscribe({
         next: () => { this.snackBar.open('Cita eliminada', 'OK', { duration: 3000 }); this.load(); },
-        error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+        error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
       });
     }
   }

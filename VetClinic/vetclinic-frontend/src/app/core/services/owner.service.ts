@@ -23,7 +23,7 @@ export interface OwnerRequest {
 
 @Injectable({ providedIn: 'root' })
 export class OwnerService {
-  private apiUrl = 'http://localhost:5000/api/Owner';
+  private apiUrl = 'http://localhost:5065/api/Owner';
 
   constructor(private http: HttpClient) { }
 

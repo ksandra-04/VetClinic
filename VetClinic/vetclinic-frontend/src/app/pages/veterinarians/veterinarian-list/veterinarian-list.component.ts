@@ -4,17 +4,16 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Veterinarian, VeterinarianService } from '../../../core/services/veterinarian.service';
 
 @Component({
   selector: 'app-veterinarian-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatCardModule, MatSnackBarModule, MatDialogModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatCardModule, MatSnackBarModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
   template: `
     <mat-card style="margin: 20px;">
       <mat-card-header>
@@ -88,16 +87,21 @@ export class VeterinarianListComponent implements OnInit {
   vets: Veterinarian[] = [];
   columns = ['name', 'specialty', 'license', 'phone', 'actions'];
   showForm = false;
+  form: FormGroup;
 
-  form = this.fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    specialty: ['', Validators.required],
-    licenseNumber: ['', Validators.required],
-    phone: ['']
-  });
-
-  constructor(private vetService: VeterinarianService, private snackBar: MatSnackBar, private fb: FormBuilder) { }
+  constructor(
+    private vetService: VeterinarianService,
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      specialty: ['', Validators.required],
+      licenseNumber: ['', Validators.required],
+      phone: ['']
+    });
+  }
 
   ngOnInit() { this.load(); }
 
@@ -105,17 +109,17 @@ export class VeterinarianListComponent implements OnInit {
 
   create() {
     if (this.form.invalid) return;
-    this.vetService.create(this.form.value as any).subscribe({
+    this.vetService.create(this.form.value).subscribe({
       next: () => { this.snackBar.open('Veterinario creado', 'OK', { duration: 3000 }); this.showForm = false; this.form.reset(); this.load(); },
-      error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+      error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
     });
   }
 
   delete(id: number) {
     if (confirm('¿Eliminar este veterinario?')) {
       this.vetService.delete(id).subscribe({
-        next: () => { this.snackBar.open('Veterinario eliminado', 'OK', { duration: 3000 }); this.load(); },
-        error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+        next: () => { this.snackBar.open('Eliminado', 'OK', { duration: 3000 }); this.load(); },
+        error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
       });
     }
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -65,14 +65,7 @@ export class PetFormComponent implements OnInit {
   isEdit = false;
   id: number | null = null;
   owners: Owner[] = [];
-
-  form = this.fb.group({
-    name: ['', Validators.required],
-    type: [0, Validators.required],
-    breed: [''],
-    birthDate: ['', Validators.required],
-    ownerId: [null, Validators.required]
-  });
+  form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -81,7 +74,15 @@ export class PetFormComponent implements OnInit {
     private petService: PetService,
     private ownerService: OwnerService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      type: [0, Validators.required],
+      breed: [''],
+      birthDate: ['', Validators.required],
+      ownerId: [null as number | null, Validators.required]
+    });
+  }
 
   ngOnInit() {
     this.ownerService.getAll().subscribe(data => this.owners = data);
@@ -89,23 +90,29 @@ export class PetFormComponent implements OnInit {
     this.isEdit = !!this.id;
     if (this.isEdit && this.id) {
       this.petService.getById(this.id).subscribe(p => {
-        this.form.patchValue({ ...p, birthDate: p.birthDate.substring(0, 10) });
+        this.form.patchValue({
+          name: p.name,
+          type: p.type,
+          breed: p.breed,
+          birthDate: p.birthDate.substring(0, 10),
+          ownerId: p.ownerId
+        });
       });
     }
   }
 
   submit() {
     if (this.form.invalid) return;
-    const dto = this.form.value as any;
+    const dto = this.form.value;
     if (this.isEdit && this.id) {
       this.petService.update(this.id, dto).subscribe({
         next: () => { this.snackBar.open('Mascota actualizada', 'OK', { duration: 3000 }); this.router.navigate(['/pets']); },
-        error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+        error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
       });
     } else {
       this.petService.create(dto).subscribe({
         next: () => { this.snackBar.open('Mascota creada', 'OK', { duration: 3000 }); this.router.navigate(['/pets']); },
-        error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+        error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
       });
     }
   }

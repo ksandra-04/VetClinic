@@ -22,7 +22,7 @@ export interface VeterinarianRequest {
 
 @Injectable({ providedIn: 'root' })
 export class VeterinarianService {
-  private apiUrl = 'http://localhost:5000/api/Veterinarian';
+  private apiUrl = 'http://localhost:5065/api/Veterinarian';
 
   constructor(private http: HttpClient) { }
 

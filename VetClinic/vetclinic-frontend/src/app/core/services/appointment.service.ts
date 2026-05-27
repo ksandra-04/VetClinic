@@ -28,7 +28,7 @@ export interface AppointmentRequest {
 
 @Injectable({ providedIn: 'root' })
 export class AppointmentService {
-  private apiUrl = 'http://localhost:5000/api/Appointment';
+  private apiUrl = 'http://localhost:5065/api/Appointment';
 
   constructor(private http: HttpClient) { }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -52,14 +52,7 @@ import { OwnerService } from '../../../core/services/owner.service';
 export class OwnerFormComponent implements OnInit {
   isEdit = false;
   id: number | null = null;
-
-  form = this.fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    phone: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    address: ['']
-  });
+  form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -67,7 +60,15 @@ export class OwnerFormComponent implements OnInit {
     private route: ActivatedRoute,
     private ownerService: OwnerService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.form = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      phone: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      address: ['']
+    });
+  }
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'] ? +this.route.snapshot.params['id'] : null;
@@ -79,16 +80,16 @@ export class OwnerFormComponent implements OnInit {
 
   submit() {
     if (this.form.invalid) return;
-    const dto = this.form.value as any;
+    const dto = this.form.value;
     if (this.isEdit && this.id) {
       this.ownerService.update(this.id, dto).subscribe({
         next: () => { this.snackBar.open('Dueño actualizado', 'OK', { duration: 3000 }); this.router.navigate(['/owners']); },
-        error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+        error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
       });
     } else {
       this.ownerService.create(dto).subscribe({
         next: () => { this.snackBar.open('Dueño creado', 'OK', { duration: 3000 }); this.router.navigate(['/owners']); },
-        error: (e) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
+        error: (e: any) => this.snackBar.open(e.error?.message || 'Error', 'OK', { duration: 3000 })
       });
     }
   }

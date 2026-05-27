@@ -25,7 +25,7 @@ export interface PetRequest {
 
 @Injectable({ providedIn: 'root' })
 export class PetService {
-  private apiUrl = 'http://localhost:5000/api/Pet';
+  private apiUrl = 'http://localhost:5065/api/Pet';
 
   constructor(private http: HttpClient) { }
 
