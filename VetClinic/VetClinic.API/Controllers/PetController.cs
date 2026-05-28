@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VetClinic.API.DTOs.Request;
 using VetClinic.API.DTOs.Response;
@@ -7,6 +8,7 @@ using VetClinic.Domain.Interfaces.Services;
 
 namespace VetClinic.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class PetController : ControllerBase
