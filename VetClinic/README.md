@@ -193,3 +193,8 @@ Scheduled/InProgress → Cancelled  (cancelar)
 - DataSeeder con ejecución condicional
 - CORS configurado para Angular (localhost:4200)
 - Swagger funcional
+
+## 🔐 Credenciales de acceso
+| Usuario | Contraseña |
+|---------|-----------|
+| admin   | vet2026   |
