@@ -102,6 +102,11 @@ Abre el navegador en:
 http://localhost:4200
 ```
 
+## 🔐 Credenciales de acceso
+| Usuario | Contraseña |
+|---------|-----------|
+| admin   | vet2026   |
+
 > El frontend consume el API en `http://localhost:5065`. Si el backend corre en un puerto diferente, actualiza la variable `apiUrl` en los servicios dentro de `src/app/core/services/`.
 
 ---
@@ -194,7 +199,3 @@ Scheduled/InProgress → Cancelled  (cancelar)
 - CORS configurado para Angular (localhost:4200)
 - Swagger funcional
 
-## 🔐 Credenciales de acceso
-| Usuario | Contraseña |
-|---------|-----------|
-| admin   | vet2026   |
